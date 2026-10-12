@@ -1,0 +1,31 @@
+# Controllable light: LIGHT file is "lit" or "dark".
+# lit  → exit 0 → conclusion success → light lit  (bit 0)
+# dark → exit 1 → conclusion failure → light dark (bit 1)
+name: light
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  light:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply LIGHT
+        run: |
+          set -euo pipefail
+          if [ ! -f LIGHT ]; then
+            echo "LIGHT file missing (want exactly: lit or dark)"
+            exit 1
+          fi
+          state=$(tr -d '[:space:]' < LIGHT | tr '[:upper:]' '[:lower:]')
+          echo "LIGHT=${state}"
+          if [ "$state" = "lit" ]; then
+            echo "● lit — exiting 0"
+            exit 0
+          fi
+          if [ "$state" = "dark" ]; then
+            echo "○ dark — exiting 1"
+            exit 1
+          fi
+          echo "LIGHT must be the single word lit or dark (got: ${state})"
+          exit 1
