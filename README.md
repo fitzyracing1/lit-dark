@@ -17,6 +17,25 @@ Copyright (c) 2026 Joshua Almeida
 
 ---
 
+## Merged fixes
+
+The site lists upstream pull requests that took a **dark** light and made it **lit** upstream: [fitzyracing1.github.io/lit-dark/#merged](https://fitzyracing1.github.io/lit-dark/#merged). The data lives in [`docs/merged.json`](docs/merged.json); the "Merged fixes" section in `docs/index.html` is static HTML generated from it (no JS needed).
+
+### Add a merge
+
+Needs Node 18+ and an authenticated [`gh`](https://cli.github.com/). After a PR is merged upstream:
+
+```bash
+node scripts/add-merged.mjs owner/repo N --dark "what light was dark" --note "optional: how it is lit now"
+git add docs/merged.json docs/index.html
+git commit -m "merged: owner/repo#N"
+git push
+```
+
+The script fetches the PR with `gh api`, refuses PRs that are not merged, and fills in `repo`, `pr`, `title`, `url`, `mergedAt` and `mergedBy` from the API. Re-running for the same PR updates the entry instead of duplicating it and keeps the earlier `--dark` / `--note` text unless you pass new text. `node scripts/add-merged.mjs --render` only regenerates the HTML from `docs/merged.json`. GitHub Pages rebuilds from `main` `/docs` on push.
+
+---
+
 ## The light computer
 
 The light computer packs eight lights into one active-low byte, runs small programs on an 8-bit CPU, and (with companion tools) turns dark lights into suggested actions.

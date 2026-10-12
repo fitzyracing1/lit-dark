@@ -1,0 +1,12 @@
+[
+  {
+    "repo": "cnpm/cnpmcore",
+    "pr": 1161,
+    "title": "ci: run test-mysql57-s3-nfs against a local S3Mock instead of the remote bucket",
+    "url": "https://github.com/cnpm/cnpmcore/pull/1161",
+    "mergedAt": "2026-10-12T04:05:45Z",
+    "mergedBy": "fengmk2",
+    "darkBefore": "cnpmcore's test-mysql57-s3-nfs CI job was dark on master: the remote S3 bucket it used answered every request with HTTP 530, so the job stayed dark run after run.",
+    "note": "Lit upstream: the job now runs against a local S3Mock service container instead of the remote bucket. The first master run after the merge (Node.js CI 38202391845) has all three test-mysql57-s3-nfs jobs lit."
+  }
+]

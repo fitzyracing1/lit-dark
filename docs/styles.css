@@ -135,3 +135,18 @@ body.paper .abstract {
   margin: 1.5rem 0;
 }
 body.paper .abstract p { margin: 0.4rem 0; }
+/* merged fixes */
+#merged { scroll-margin-top: 4.5rem; }
+ul.merged { list-style: none; padding: 0; margin: 1rem 0; }
+.merged-item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 0 0 0.85rem;
+  max-width: none;
+}
+.merged-head { font-weight: 600; }
+.merged-lamp { color: var(--lit); }
+.merged-meta { font-size: 0.9rem; color: var(--muted); margin-top: 0.15rem; }
+.merged-item p { margin: 0.55rem 0 0; }

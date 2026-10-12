@@ -13,6 +13,7 @@
       <a class="brand" href="index.html">lit-dark <span>· light computer</span></a>
       <nav>
         <a href="index.html" aria-current="page">Home</a>
+        <a href="#merged">Merged fixes</a>
         <a href="whitepaper.html">White paper</a>
         <a href="https://github.com/fitzyracing1/lit-dark">GitHub</a>
       </nav>
@@ -95,6 +96,21 @@ node read-light.mjs fitzyracing1/lit-dark
         </tr>
       </tbody>
     </table>
+
+    <!-- merged:start -->
+    <section id="merged">
+    <h2>Merged fixes</h2>
+    <p>Each entry is an upstream pull request, merged by the project’s maintainers, that took a light that was <strong>dark</strong> and made it <strong>lit</strong> upstream. Data: <a href="merged.json">merged.json</a>.</p>
+    <ul class="merged">
+      <li class="merged-item">
+        <div class="merged-head"><span class="merged-lamp" aria-hidden="true">●</span> <a href="https://github.com/cnpm/cnpmcore/pull/1161">cnpm/cnpmcore#1161</a> — ci: run test-mysql57-s3-nfs against a local S3Mock instead of the remote bucket</div>
+        <div class="merged-meta">Merged <time datetime="2026-10-12T04:05:45Z">2026-10-12</time> by <a href="https://github.com/fengmk2">@fengmk2</a></div>
+        <p><strong>Was dark:</strong> cnpmcore&#39;s test-mysql57-s3-nfs CI job was dark on master: the remote S3 bucket it used answered every request with HTTP 530, so the job stayed dark run after run.</p>
+        <p class="muted">Lit upstream: the job now runs against a local S3Mock service container instead of the remote bucket. The first master run after the merge (Node.js CI 38202391845) has all three test-mysql57-s3-nfs jobs lit.</p>
+      </li>
+    </ul>
+    </section>
+    <!-- merged:end -->
 
     <h2>The light computer</h2>
     <p>
