@@ -26,13 +26,16 @@ The site lists upstream pull requests that took a **dark** light and made it **l
 Needs Node 18+ and an authenticated [`gh`](https://cli.github.com/). After a PR is merged upstream:
 
 ```bash
-node scripts/add-merged.mjs owner/repo N --dark "what light was dark" --note "optional: how it is lit now"
+node scripts/add-merged.mjs owner/repo N --light "upstream job name" \
+  --dark "why the light was dark" --dark-since 2026-04-01T05:30:13Z \
+  --fix "what the PR changed, in one sentence" \
+  [--dark-run https://github.com/owner/repo/actions/runs/BEFORE] [--lit-run https://github.com/owner/repo/actions/runs/AFTER]
 git add docs/merged.json docs/index.html
 git commit -m "merged: owner/repo#N"
 git push
 ```
 
-The script fetches the PR with `gh api`, refuses PRs that are not merged, and fills in `repo`, `pr`, `title`, `url`, `mergedAt` and `mergedBy` from the API. Re-running for the same PR updates the entry instead of duplicating it and keeps the earlier `--dark` / `--note` text unless you pass new text. `node scripts/add-merged.mjs --render` only regenerates the HTML from `docs/merged.json`. GitHub Pages rebuilds from `main` `/docs` on push.
+The script fetches the PR with `gh api`, refuses PRs that are not merged, and fills in `repo`, `pr`, `title`, `url`, `mergedAt` and `mergedBy` from the API. Each entry explains what happened: **Before** (which upstream light was dark, since when, why, and a link to a dark upstream run before the merge), **Fix** (one sentence) and **After** (the first upstream run on the default branch after the merge, with how many of the `--light` jobs are lit). Without `--dark-run` / `--lit-run` the script finds those runs itself on the default branch and checks the jobs whose name contains `--light`. Until the after-merge run is lit the page says "waiting for upstream light"; re-run the command later to refresh it. Re-running for the same PR updates the entry instead of duplicating it and keeps earlier text unless you pass new text. `node scripts/add-merged.mjs --render` only regenerates the HTML from `docs/merged.json`. GitHub Pages rebuilds from `main` `/docs` on push.
 
 ---
 

@@ -150,3 +150,5 @@ ul.merged { list-style: none; padding: 0; margin: 1rem 0; }
 .merged-lamp { color: var(--lit); }
 .merged-meta { font-size: 0.9rem; color: var(--muted); margin-top: 0.15rem; }
 .merged-item p { margin: 0.55rem 0 0; }
+.merged-lamp.waiting { color: var(--muted); }
+.merged-item code { font-size: 0.9em; }

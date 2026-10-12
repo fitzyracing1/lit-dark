@@ -100,13 +100,14 @@ node read-light.mjs fitzyracing1/lit-dark
     <!-- merged:start -->
     <section id="merged">
     <h2>Merged fixes</h2>
-    <p>Each entry is an upstream pull request, merged by the project’s maintainers, that took a light that was <strong>dark</strong> and made it <strong>lit</strong> upstream. Data: <a href="merged.json">merged.json</a>.</p>
+    <p>Each entry is an upstream pull request, merged by the project’s maintainers, that took a light that was <strong>dark</strong> and made it <strong>lit</strong> upstream. <em>Before</em> links a dark upstream run, <em>After</em> links the first upstream run after the merge; both are checked with the GitHub API. Data: <a href="merged.json">merged.json</a>.</p>
     <ul class="merged">
       <li class="merged-item">
-        <div class="merged-head"><span class="merged-lamp" aria-hidden="true">●</span> <a href="https://github.com/cnpm/cnpmcore/pull/1161">cnpm/cnpmcore#1161</a> — ci: run test-mysql57-s3-nfs against a local S3Mock instead of the remote bucket</div>
-        <div class="merged-meta">Merged <time datetime="2026-10-12T04:05:45Z">2026-10-12</time> by <a href="https://github.com/fengmk2">@fengmk2</a></div>
-        <p><strong>Was dark:</strong> cnpmcore&#39;s test-mysql57-s3-nfs CI job was dark on master: the remote S3 bucket it used answered every request with HTTP 530, so the job stayed dark run after run.</p>
-        <p class="muted">Lit upstream: the job now runs against a local S3Mock service container instead of the remote bucket. The first master run after the merge (Node.js CI 38202391845) has all three test-mysql57-s3-nfs jobs lit.</p>
+        <div class="merged-head"><span class="merged-lamp" aria-hidden="true">●</span> lit · <a href="https://github.com/cnpm/cnpmcore/pull/1161">cnpm/cnpmcore#1161</a> — ci: run test-mysql57-s3-nfs against a local S3Mock instead of the remote bucket</div>
+        <div class="merged-meta">Merged <time datetime="2026-10-12T04:05:45Z">Oct 12, 2026, 12:05 AM ET</time> by <a href="https://github.com/fengmk2">@fengmk2</a> in <a href="https://github.com/cnpm/cnpmcore">cnpm/cnpmcore</a></div>
+        <p><strong>Before:</strong> <code>test-mysql57-s3-nfs</code> was <strong>dark</strong> on master since Apr 1, 2026. The test-mysql57-s3-nfs job ran against a remote S3 bucket that answered every request with HTTP 530 (origin unreachable), so the job stayed dark on every master run. Dark run before the fix: <a href="https://github.com/cnpm/cnpmcore/actions/runs/37601763270">Node.js CI 37601763270</a> (Oct 7, 2026, 5:36 AM ET), 3 of 3 test-mysql57-s3-nfs jobs dark.</p>
+        <p><strong>Fix:</strong> The job now starts a local S3Mock container with the bucket pre-created and uses it instead of the remote bucket, plus a matching tweak to one download test.</p>
+        <p><strong>After:</strong> <strong>lit upstream now.</strong> First master run after the merge: <a href="https://github.com/cnpm/cnpmcore/actions/runs/38202391845">Node.js CI 38202391845</a> (Oct 12, 2026, 12:05 AM ET), 3 of 3 test-mysql57-s3-nfs jobs lit.</p>
       </li>
     </ul>
     </section>
