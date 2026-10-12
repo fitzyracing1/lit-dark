@@ -97,3 +97,8 @@ Recorded Oct 11, 2026 ~11:58–11:59 PM ET on `fitzyracing1/lit-dark`:
 | **dark** | `1` | https://github.com/fitzyracing1/lit-dark/actions/runs/38201942095 | `○ dark  bit=1  fitzyracing1/lit-dark` |
 
 Anyone can re-run the steps above on a fork and get the same two states.
+
+## Documentation
+
+- In-repo docs: [docs/](docs/index.md)
+- Wiki: [https://github.com/fitzyracing1/lit-dark/wiki](https://github.com/fitzyracing1/lit-dark/wiki)
