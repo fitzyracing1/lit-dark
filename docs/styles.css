@@ -1,0 +1,137 @@
+:root {
+  --bg: #fafafa;
+  --fg: #141414;
+  --muted: #5a5a5a;
+  --line: #e4e4e4;
+  --card: #ffffff;
+  --lit: #1a1a1a;
+  --dark-ink: #888;
+  --accent: #0b57d0;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --max: 44rem;
+  --wide: 52rem;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--fg);
+  background: var(--bg);
+  font: 17px/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+.wrap { max-width: var(--wide); margin: 0 auto; padding: 0 1.25rem 4rem; }
+header.site {
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+  position: sticky; top: 0; z-index: 10;
+}
+header.site .inner {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0.85rem 1.25rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.brand { font-weight: 650; letter-spacing: -0.02em; color: var(--fg); text-decoration: none; }
+.brand span { color: var(--muted); font-weight: 500; }
+nav a { margin-left: 1rem; color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+nav a:hover, nav a[aria-current="page"] { color: var(--fg); }
+.hero {
+  padding: 3.25rem 0 2rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2rem;
+}
+.hero h1 {
+  font: 650 2.35rem/1.15 var(--sans);
+  letter-spacing: -0.03em;
+  margin: 0 0 0.75rem;
+}
+.hero p.lede { font-size: 1.15rem; color: var(--muted); max-width: 38rem; margin: 0; }
+.lamps {
+  display: flex; gap: 0.75rem; margin: 1.5rem 0 0; flex-wrap: wrap;
+}
+.lamp {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  min-width: 9.5rem;
+}
+.lamp .dot { font-size: 1.4rem; line-height: 1; }
+.lamp .name { font-weight: 650; margin-top: 0.25rem; }
+.lamp .bit { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
+.lamp.dark .dot, .lamp.dark .name { color: var(--dark-ink); }
+h2 { font-size: 1.35rem; letter-spacing: -0.02em; margin: 2.25rem 0 0.75rem; }
+h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+p, li { max-width: var(--max); }
+ul { padding-left: 1.2rem; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 0.95rem;
+}
+th, td { text-align: left; padding: 0.65rem 0.8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: #f3f3f3; font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+pre, code { font-family: var(--mono); font-size: 0.88em; }
+pre {
+  background: #111;
+  color: #f2f2f2;
+  padding: 1rem 1.1rem;
+  border-radius: 10px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin: 1rem 0;
+}
+.muted { color: var(--muted); }
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } .hero h1 { font-size: 1.85rem; } }
+footer.site {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+/* white paper */
+body.paper { background: #fff; }
+body.paper .wrap { max-width: 40rem; }
+body.paper .title {
+  font: 650 2rem/1.2 var(--serif);
+  letter-spacing: -0.02em;
+  margin: 2.5rem 0 0.5rem;
+}
+body.paper .byline { color: var(--muted); margin: 0 0 2rem; font-size: 0.98rem; }
+body.paper h2 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  margin-top: 2.5rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1.25rem;
+}
+body.paper p, body.paper li { font-family: var(--serif); font-size: 1.05rem; line-height: 1.65; }
+body.paper .abstract {
+  background: #f7f7f7;
+  border-left: 3px solid var(--fg);
+  padding: 1rem 1.15rem;
+  margin: 1.5rem 0;
+}
+body.paper .abstract p { margin: 0.4rem 0; }

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A lit/dark standard for CI lights — white paper</title>
+  <meta name="description" content="White paper: lit and dark as an active-low CI light standard, how to read lights, pack bytes, and reproduce both states." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="paper">
+  <header class="site">
+    <div class="inner">
+      <a class="brand" href="index.html">lit-dark <span>· light computer</span></a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="whitepaper.html" aria-current="page">White paper</a>
+        <a href="https://github.com/fitzyracing1/lit-dark">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1 class="title">A lit/dark standard for CI lights</h1>
+    <p class="byline">Joshua Almeida · 2026 · Active-low: lit&nbsp;=&nbsp;0, dark&nbsp;=&nbsp;1</p>
+
+    <section class="abstract" id="abstract">
+      <p><strong>Abstract.</strong>
+      Continuous integration produces a conclusion for each completed run, but everyday language
+      around that conclusion is inconsistent (and often borrowed from color metaphors).
+      This note defines a single bit of CI truth called a <em>light</em>, with vocabulary limited to
+      <strong>lit</strong> and <strong>dark</strong>, encoded active-low (lit&nbsp;=&nbsp;0, dark&nbsp;=&nbsp;1).
+      It specifies how to read one light from GitHub Actions, how to pack eight lights into a byte,
+      and how a “light computer” can consume that byte. Both states are demonstrated with
+      reproducible proof runs in a public repository.
+      </p>
+    </section>
+
+    <h2 id="problem">1. Problem</h2>
+    <p>
+      Programs that react to upstream CI need a stable name for “the latest relevant build is in
+      the good state” versus “it is not.” Color words and pass/fail jargon vary by UI and by speaker.
+      Fetch errors (API rate limits, missing runs, network failure) are sometimes conflated with a
+      dark CI light. Without a short standard, readers disagree about what a dashboard row or a
+      registry rewrite means.
+    </p>
+
+    <h2 id="definitions">2. Definitions</h2>
+    <p>
+      A <strong>light</strong> is one bit of CI truth for a GitHub repository (or a local override used only for demos).
+    </p>
+    <p>
+      The vocabulary is only <strong>lit</strong> and <strong>dark</strong>. Map once from GitHub Actions:
+      <code>conclusion === "success"</code> → lit; any other conclusion → dark. After that mapping,
+      speak only in lit and dark.
+    </p>
+    <ul>
+      <li><strong>lit</strong> — logical <code>0</code> — lamp ●</li>
+      <li><strong>dark</strong> — logical <code>1</code> — lamp ○</li>
+    </ul>
+    <p>
+      Encoding is <strong>active-low</strong>, like a hardware signal line: lit = 0, dark = 1.
+    </p>
+    <p>
+      <strong>Dark</strong> means the upstream project’s latest relevant CI run mapped to dark.
+      Dark does <em>not</em> mean “download failed”, “registry 404”, “npm install broke”, or
+      “we could not fetch the API.” Those are fetch or transport errors; report them separately
+      and do not invent a dark light from them.
+    </p>
+    <p>
+      “Relevant” means the newest <em>completed</em> GitHub Actions run with <code>event=push</code>.
+      If no such run exists, that is an error, not a dark light.
+    </p>
+
+    <h2 id="reading">3. How a light is read from CI</h2>
+    <p>Request the newest completed push-triggered run:</p>
+<pre><code>GET /repos/{owner}/{repo}/actions/runs?per_page=1&amp;status=completed&amp;event=push
+Accept: application/vnd.github+json</code></pre>
+    <p>
+      Take <code>workflow_runs[0]</code>. Apply the one-time map above to obtain lit or dark.
+      Optional authentication via <code>GITHUB_TOKEN</code> raises the API rate limit; it is not required
+      for public repositories under ordinary use.
+    </p>
+    <p>
+      A no-dependency Node reader ships in the companion repository:
+      <code>node read-light.mjs [owner/repo]</code>.
+    </p>
+
+    <h2 id="encoding">4. Active-low encoding into bytes</h2>
+    <p>
+      Eight lights pack into one active-low byte. Repo index <code>i</code> (0…7) occupies bit
+      <code>(7 − i)</code>. The bit is 1 when the light is dark and 0 when lit.
+    </p>
+    <p>
+      Example lamps <code>●●●●○○●●</code> → bits <code>00001100</code> → byte <code>12</code>.
+    </p>
+<pre><code>// lit → 0, dark → 1
+function lightsToByte(lights) {
+  return lights.slice(0, 8).reduce(
+    (b, l, i) => (l.lit ? b : b | (1 &lt;&lt; (7 - i))),
+    0,
+  );
+}</code></pre>
+
+    <h2 id="computer">5. The light computer as a consumer</h2>
+    <p>
+      A light computer loads the byte onto an 8-bit CPU <strong>IN</strong> port and runs small programs
+      (for example a popcount of dark bits, XOR against the previous read, a running tally).
+      Higher-level programs read the last lights and emit suggested actions in plain words —
+      on demand, offline relative to further fetching, and suggest-only (no automatic posts,
+      publishes, or registry changes).
+    </p>
+    <p>
+      The public landing for the standard and proof is
+      <a href="https://github.com/fitzyracing1/lit-dark">fitzyracing1/lit-dark</a>.
+      The implementation repository
+      <a href="https://github.com/fitzyracing1/light-computer">fitzyracing1/light-computer</a>
+      is private for now; companion suggest-only programs and an opt-in registry remain private
+      until opened.
+    </p>
+
+    <h2 id="reproducibility">6. Reproducibility method and proof runs</h2>
+    <p>
+      Repository <code>fitzyracing1/lit-dark</code> contains a file <code>LIGHT</code> whose sole contents are the
+      word <code>lit</code> or <code>dark</code>. A GitHub Actions workflow reads that file and exits 0 for lit
+      or 1 for dark, forcing the Actions conclusion. Anyone may fork the repository, flip the file,
+      push, wait for the run to complete, and read the light with <code>read-light.mjs</code>.
+    </p>
+    <p>Proof runs recorded on this repository (Oct&nbsp;11, 2026 ~11:58–11:59&nbsp;PM&nbsp;ET):</p>
+    <ul>
+      <li><strong>lit</strong> (bit 0) —
+        <a href="https://github.com/fitzyracing1/lit-dark/actions/runs/38201903463">actions/runs/38201903463</a>
+        — reader: <code>● lit  bit=0  fitzyracing1/lit-dark</code></li>
+      <li><strong>dark</strong> (bit 1) —
+        <a href="https://github.com/fitzyracing1/lit-dark/actions/runs/38201942095">actions/runs/38201942095</a>
+        — reader: <code>○ dark  bit=1  fitzyracing1/lit-dark</code></li>
+    </ul>
+
+    <h2 id="uses">7. Uses</h2>
+    <p>Verified directions already explored in companion private tools (not adoption metrics):</p>
+    <ul>
+      <li><strong>Opt-in registries.</strong> While a mapped package’s light is dark, an opt-in registry may
+        serve a packaged fork under the same name; while lit, it serves or proxies the ordinary upstream.</li>
+      <li><strong>Dashboards and programs.</strong> A status board or suggest-only program can list which
+        tracked lights are dark and propose human-reviewed next steps.</li>
+      <li><strong>Local demos.</strong> A local override file can force lit or dark for a demo package without
+        waiting on a public upstream — without claiming that override is the upstream’s light.</li>
+    </ul>
+
+    <h2 id="limitations">8. Limitations</h2>
+    <ul>
+      <li>The “latest push run” filter is a convention; monorepos with many workflows may surface a
+        run that is not the check a human cares about most.</li>
+      <li>A dark light does not by itself imply a safe or desirable rewrite of dependencies.</li>
+      <li>API failures must not be encoded as dark; the reader should error instead.</li>
+      <li>Private implementation repositories are not yet publicly auditable.</li>
+    </ul>
+
+    <h2 id="future">9. Future work</h2>
+    <ul>
+      <li>Opening the light computer and companion tools when ready, with the same lit/dark vocabulary.</li>
+      <li>Optional workflow selectors (by name or path) where “latest push run” is too coarse.</li>
+      <li>History that distinguishes flake (dark→lit→dark in a short window) from a sustained dark streak.</li>
+    </ul>
+
+    <h2 id="copyright">Copyright</h2>
+    <p>Copyright (c) 2026 Joshua Almeida</p>
+    <p class="muted"><a href="index.html">← Back to landing</a> · <a href="https://github.com/fitzyracing1/lit-dark">Source repository</a></p>
+  </main>
+</body>
+</html>

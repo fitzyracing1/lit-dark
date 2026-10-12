@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>lit-dark — the light computer landing</title>
+  <meta name="description" content="Lit and dark: an active-low CI light standard. lit = 0, dark = 1. Reproducible proof runs and the light computer." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site">
+    <div class="inner">
+      <a class="brand" href="index.html">lit-dark <span>· light computer</span></a>
+      <nav>
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="whitepaper.html">White paper</a>
+        <a href="https://github.com/fitzyracing1/lit-dark">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>One bit of CI truth:<br />lit or dark.</h1>
+      <p class="lede">
+        A light names whether an upstream project’s latest relevant CI run mapped to
+        <strong>lit</strong> or <strong>dark</strong>. Encoding is active-low —
+        like a hardware signal line: <strong>lit&nbsp;=&nbsp;0</strong>, <strong>dark&nbsp;=&nbsp;1</strong>.
+      </p>
+      <div class="lamps">
+        <div class="lamp lit">
+          <div class="dot">●</div>
+          <div class="name">lit</div>
+          <div class="bit">bit 0</div>
+        </div>
+        <div class="lamp dark">
+          <div class="dot">○</div>
+          <div class="name">dark</div>
+          <div class="bit">bit 1</div>
+        </div>
+      </div>
+    </section>
+
+    <h2>What the words mean</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">lit</h3>
+        <p>The latest relevant completed GitHub Actions run (push) has
+        <code>conclusion === "success"</code>. Logical value <code>0</code>.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">dark</h3>
+        <p>That run has any other conclusion. Logical value <code>1</code>.
+        Dark is about the project’s own CI — not “download failed”.</p>
+      </div>
+    </div>
+    <p class="muted">Map once from GitHub’s conclusion field, then use only <strong>lit</strong> and <strong>dark</strong>. Full write-up: <a href="whitepaper.html">white paper</a> · <a href="https://github.com/fitzyracing1/lit-dark/blob/main/SPEC.md">SPEC.md</a>.</p>
+
+    <h2>Reproduce it</h2>
+    <p>This public repo has a file <code>LIGHT</code> that is exactly <code>lit</code> or <code>dark</code>.
+    The workflow exits 0 or 1 so the Actions conclusion matches. A no-deps reader prints the state and bit.</p>
+<pre><code>git clone https://github.com/fitzyracing1/lit-dark
+cd lit-dark
+
+# Force lit
+echo lit &gt; LIGHT
+git add LIGHT &amp;&amp; git commit -m 'light: lit' &amp;&amp; git push
+node read-light.mjs fitzyracing1/lit-dark
+# expect: ● lit  bit=0
+
+# Force dark
+echo dark &gt; LIGHT
+git add LIGHT &amp;&amp; git commit -m 'light: dark' &amp;&amp; git push
+node read-light.mjs fitzyracing1/lit-dark
+# expect: ○ dark  bit=1</code></pre>
+
+    <h2>Proof runs</h2>
+    <p>Recorded on <code>fitzyracing1/lit-dark</code> (Oct&nbsp;11, 2026 ~11:58–11:59&nbsp;PM&nbsp;ET):</p>
+    <table>
+      <thead>
+        <tr><th>State</th><th>bit</th><th>Actions run</th><th>Reader</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>● lit</td>
+          <td><code>0</code></td>
+          <td><a href="https://github.com/fitzyracing1/lit-dark/actions/runs/38201903463">38201903463</a></td>
+          <td><code>● lit  bit=0</code></td>
+        </tr>
+        <tr>
+          <td>○ dark</td>
+          <td><code>1</code></td>
+          <td><a href="https://github.com/fitzyracing1/lit-dark/actions/runs/38201942095">38201942095</a></td>
+          <td><code>○ dark  bit=1</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>The light computer</h2>
+    <p>
+      Eight lights pack into one active-low byte. A small CPU and programs consume that byte —
+      suggest-only actions when lights are dark, never auto-acting.
+    </p>
+    <ul>
+      <li>This site / repo — public spec and proof</li>
+      <li><a href="https://github.com/fitzyracing1/light-computer">fitzyracing1/light-computer</a> — implementation (private for now)</li>
+      <li><a href="https://github.com/fitzyracing1/light-programs">fitzyracing1/light-programs</a> — suggest-only programs (private for now)</li>
+      <li><a href="https://github.com/fitzyracing1/patch-cloud">fitzyracing1/patch-cloud</a> — opt-in registry that can serve a fork while a mapped light is dark (private for now)</li>
+    </ul>
+    <p class="muted">If a private link 404s, that repo is not public yet. The proof above stands on its own.</p>
+
+    <footer class="site">
+      <p>Copyright (c) 2026 Joshua Almeida · <a href="whitepaper.html">White paper</a> · <a href="https://github.com/fitzyracing1/lit-dark">Source</a></p>
+    </footer>
+  </main>
+</body>
+</html>

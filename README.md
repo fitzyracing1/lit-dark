@@ -1,6 +1,6 @@
 # lit-dark
 
-**Landing page for the light computer.** One bit of CI truth, named only **lit** or **dark**.
+**Landing page for the light computer.** Site: [fitzyracing1.github.io/lit-dark](https://fitzyracing1.github.io/lit-dark/) · [White paper](https://fitzyracing1.github.io/lit-dark/whitepaper.html). One bit of CI truth, named only **lit** or **dark**.
 
 | State | Logical value (active-low) | Lamp |
 |---|---|---|
