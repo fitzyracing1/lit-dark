@@ -21,10 +21,14 @@ Copyright (c) 2026 Joshua Almeida
 
 The light computer packs eight lights into one active-low byte, runs small programs on an 8-bit CPU, and (with companion tools) turns dark lights into suggested actions.
 
-- Spec and reproducible proof: **this public repo**
-- Implementation (CPU, fetch, programs): [`fitzyracing1/light-computer`](https://github.com/fitzyracing1/light-computer) — **private for now**; link stays here so it works the moment it is opened
-- Suggest-only programs (standalone): [`fitzyracing1/light-programs`](https://github.com/fitzyracing1/light-programs) — private for now
-- Opt-in registry that can serve a fork while a mapped light is dark: [`fitzyracing1/patch-cloud`](https://github.com/fitzyracing1/patch-cloud) — private for now
+| Piece | Repo | Access |
+|---|---|---|
+| Spec + reproducible proof (you are here) | [`fitzyracing1/lit-dark`](https://github.com/fitzyracing1/lit-dark) | **public** |
+| CPU, fetch, byte, programs | [`fitzyracing1/light-computer`](https://github.com/fitzyracing1/light-computer) | private for now |
+| Suggest-only programs (standalone) | [`fitzyracing1/light-programs`](https://github.com/fitzyracing1/light-programs) | private for now |
+| Opt-in registry (fork while mapped light is dark) | [`fitzyracing1/patch-cloud`](https://github.com/fitzyracing1/patch-cloud) | private for now |
+
+If a private link 404s, that repo is not public yet — this landing page and the proof below still stand on their own.
 
 ---
 
@@ -63,7 +67,11 @@ The switch is the file [`LIGHT`](LIGHT) (`lit` or `dark`). Workflow: [`.github/w
 
 ### Proof runs (this repo)
 
-| State | bit | Actions run | Reader output |
+Recorded Oct 11, 2026 ~11:58–11:59 PM ET on `fitzyracing1/lit-dark`:
+
+| State | bit | Actions run | Reader |
 |---|---|---|---|
-| lit | 0 | _(will fill)_ | _(will fill)_ |
-| dark | 1 | _(will fill)_ | _(will fill)_ |
+| **lit** | `0` | https://github.com/fitzyracing1/lit-dark/actions/runs/38201903463 | `● lit  bit=0  fitzyracing1/lit-dark` |
+| **dark** | `1` | https://github.com/fitzyracing1/lit-dark/actions/runs/38201942095 | `○ dark  bit=1  fitzyracing1/lit-dark` |
+
+Anyone can re-run the steps above on a fork and get the same two states.
