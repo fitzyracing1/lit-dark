@@ -1,0 +1,14 @@
+{
+  "name": "lit-dark",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/add-merged.test.mjs test/read-light.test.mjs"
+  },
+  "dependencies": {
+    "@fitzyracing1/light-core": "git+https://github.com/fitzyracing1/light-core.git#v0.1.0"
+  }
+}

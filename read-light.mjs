@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // read-light.mjs — read one repo's latest completed push-triggered Actions run
-// and print lit/dark + the active-low bit. No dependencies. Node 18+.
+// and print lit/dark + the active-low bit. Node 18+. Uses @fitzyracing1/light-core.
 //
 //   node read-light.mjs [owner/repo]
 //   node read-light.mjs fitzyracing1/lit-dark
 //
-// Map once: conclusion === "success" → lit (bit 0); anything else → dark (bit 1).
+// Map once (light-core lightOf): conclusion === "success" → lit (bit 0); anything else → dark (bit 1).
+// No completed push run → error (exit 1), not dark.
 import process from 'node:process';
+import { createGitHub, readLatestPushLight, lamp, toBit } from '@fitzyracing1/light-core';
 
 const repo = process.argv[2] || 'fitzyracing1/lit-dark';
 if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) {
@@ -14,33 +16,19 @@ if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) {
   process.exit(2);
 }
 
-const url = `https://api.github.com/repos/${repo}/actions/runs?per_page=1&status=completed&event=push`;
-const headers = {
-  Accept: 'application/vnd.github+json',
-  'User-Agent': 'lit-dark-reader',
-  'X-GitHub-Api-Version': '2022-11-28',
-};
-if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-
-const res = await fetch(url, { headers });
-if (!res.ok) {
-  console.error(`${repo}: HTTP ${res.status} ${(await res.text()).slice(0, 200)}`);
-  process.exit(1);
-}
-const data = await res.json();
-const run = data.workflow_runs && data.workflow_runs[0];
-if (!run) {
-  console.error(`${repo}: no completed push workflow runs yet`);
+const gh = createGitHub({ token: process.env.GITHUB_TOKEN, userAgent: 'lit-dark-reader' });
+let read;
+try {
+  read = await readLatestPushLight(gh, repo);
+} catch (e) {
+  // No run is an error, never dark (SPEC). HTTP and rate-limit failures are errors too.
+  console.error(`${repo}: ${e.message}`);
   process.exit(1);
 }
 
-const lit = run.conclusion === 'success';
-const bit = lit ? 0 : 1;
-const lamp = lit ? '●' : '○';
-const state = lit ? 'lit' : 'dark';
-
-console.log(`${lamp} ${state}  bit=${bit}  ${repo}`);
-console.log(`  conclusion: ${run.conclusion}`);
-console.log(`  workflow:   ${run.name}`);
-console.log(`  run:        ${run.html_url}`);
-console.log(`  at:         ${run.updated_at}`);
+const { light, conclusion, workflow, url, at } = read;
+console.log(`${lamp(light)} ${light}  bit=${toBit(light)}  ${repo}`);
+console.log(`  conclusion: ${conclusion}`);
+console.log(`  workflow:   ${workflow}`);
+console.log(`  run:        ${url}`);
+console.log(`  at:         ${at}`);

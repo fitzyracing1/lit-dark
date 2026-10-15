@@ -40,14 +40,12 @@ Eight lights pack into one **active-low** byte (MSB = first repo):
 - Example lamps `●●●●○○●●` → bits `00001100` → byte `12`
 
 ```js
-// lit → 0, dark → 1
-function lightsToByte(lights) {
-  return lights.slice(0, 8).reduce(
-    (b, l, i) => (l.lit ? b : b | (1 << (7 - i))),
-    0,
-  );
-}
+import { pack, unpack } from '@fitzyracing1/light-core';
+pack(['lit', 'lit', 'lit', 'lit', 'dark', 'dark', 'lit', 'lit']); // 12
+unpack(12, 8); // ['lit', 'lit', 'lit', 'lit', 'dark', 'dark', 'lit', 'lit']
 ```
+
+`pack()` throws on more than 8 lights or on a value that isn't lit or dark; a missing light is an error, never dark.
 
 ## Controllable light in this repo
 
